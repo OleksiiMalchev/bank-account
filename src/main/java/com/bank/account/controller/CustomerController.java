@@ -62,7 +62,7 @@ public class CustomerController {
         if (customerService.deleteCustomer(customerId)) {
             return new ResponseEntity<String>("DELETE Response", HttpStatus.OK);
         }
-        return new ResponseEntity<>("Author not found. No action taken.", HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("Customer not found. No action taken.", HttpStatus.NO_CONTENT);
     }
 
 }
