@@ -2,11 +2,11 @@ package com.bank.account.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.Id;
+
 
 import java.time.LocalDateTime;
 import java.util.List;
-
+@Table(name="customer")
 @Entity
 @Getter
 @Setter
@@ -23,7 +23,9 @@ public class Customer {
     private String lastName;
     @Column(name = "date_of_birth")
     private LocalDateTime dateOfBirth;
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-    private List<Transaction> transactions;
+    @Column(name = "active")
+    private boolean active;
+//    @OneToMany(mappedBy = "customer", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+//    private List<Transaction> transactions;
 
 }

@@ -1,2 +1,21 @@
 server:
-  port: 8081
+  port: 8079
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/bank
+    username: root
+    password: root
+  jpa:
+    hibernate:
+    ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+        generate_statistics: false
+        show_sql: true
+  flyway:
+    enabled: true
+    locations: classpath:db.migration
+    outOfOrder: true

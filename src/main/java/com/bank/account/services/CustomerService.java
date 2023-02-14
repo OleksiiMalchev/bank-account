@@ -5,12 +5,13 @@ import com.bank.account.domain.dto.CustomerRespDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public interface CustomerService {
     List<CustomerRespDTO> getCustomers();
-    CustomerRespDTO createCustomer(CustomerReqDTO customerReqDTO);
-    CustomerRespDTO updateCustomer(String id, CustomerReqDTO customerReqDTO);
-    CustomerRespDTO getCustomerById(String id);
+    Optional<CustomerRespDTO> createCustomer(CustomerReqDTO customerReqDTO);
+    Optional<CustomerRespDTO> updateCustomer(String id, CustomerReqDTO customerReqDTO);
+    Optional<CustomerRespDTO> getCustomerById(String id);
     boolean deleteCustomer(String id);
 }
