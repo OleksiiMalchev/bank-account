@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
-
+@Table(name="account")
 @Entity
 @Getter
 @Setter
@@ -24,6 +24,6 @@ public class Account {
     @ManyToOne
     @JoinColumn(name="customer_id",insertable = false, updatable = false)
     private Customer customer;
-    @OneToMany(mappedBy = "transaction", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "account", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<Transaction> transactions;
 }
