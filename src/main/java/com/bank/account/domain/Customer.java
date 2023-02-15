@@ -25,7 +25,7 @@ public class Customer {
     private LocalDateTime dateOfBirth;
     @Column(name = "active")
     private boolean active;
-//    @OneToMany(mappedBy = "customer", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-//    private List<Transaction> transactions;
+    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private List<Account> accounts;
 
 }
