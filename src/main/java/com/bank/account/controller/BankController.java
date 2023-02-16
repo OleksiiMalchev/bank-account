@@ -19,12 +19,21 @@ public class BankController {
     private final BankService bankService;
     @GetMapping("/bank/customers")
     public ResponseEntity<? super List<CustomerAccountRespDTO>> getAllCustomer() {
-        List<Customer> customerAccountRespDTOS = bankService.reportCustomers();
-        if (customerAccountRespDTOS.isEmpty()) {
+        List<CustomerAccountRespDTO> customerAccountRespDTOS = bankService.reportCustomers();
+        if (customerAccountRespDTOS .isEmpty()) {
             return new ResponseEntity<>("Customers not found ", HttpStatus.NOT_FOUND);
         } else {
             return ResponseEntity.status(200).body(customerAccountRespDTOS);
         }
+    }
+
+    @GetMapping("/bank/customers/{id}")
+    public ResponseEntity<? super CustomerAccountRespDTO> reportCustomerById(@PathVariable("id") String customerId) {
+        Optional<CustomerAccountRespDTO> customerAccountRespDTO = bankService.reportCustomerById(customerId);
+        if (customerAccountRespDTO.isPresent()) {
+            return ResponseEntity.status(200).body(customerAccountRespDTO);
+        }
+        return new ResponseEntity<>("Customer by id" + customerId + " not found. No action taken.", HttpStatus.NOT_FOUND);
     }
     @PostMapping("/bank/customers/add-account")
     public ResponseEntity<? super AccountRespDTO> createAccount(@RequestBody(required = false)AccountReqDTO accountReqDTO) {

@@ -15,18 +15,9 @@ public interface CustomerRepository extends CrudRepository<Customer, String> {
     @Override
     List<Customer> findAll();
 
-    @Query(value = "SELECT * FROM customer\n" +
-            "INNER JOIN account \n" +
-            "ON customer.id= account.customer_id\n" +
-            "INNER JOIN transaction\n" +
-            "ON account.id = transaction.account_id\n" +
-            "where customer_id = :id", nativeQuery = true)
+    @Query("SELECT customer from Customer customer left join fetch  customer.accounts where customer.id = :id")
     Optional<Customer> reportCustomerById(@Param("id") String customerId);
 
-    @Query(value = "SELECT * FROM customer\n" +
-            "INNER JOIN account \n" +
-            "ON customer.id= account.customer_id\n" +
-            "INNER JOIN transaction\n" +
-            "ON account.id = transaction.account_id", nativeQuery = true)
+    @Query("SELECT customer from Customer customer left join fetch  customer.accounts")
     List<Customer> reportCustomer();
 }
