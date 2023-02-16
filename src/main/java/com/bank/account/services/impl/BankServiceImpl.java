@@ -11,6 +11,7 @@ import com.bank.account.repositories.AccountRepository;
 import com.bank.account.repositories.CustomerRepository;
 import com.bank.account.repositories.TransactionRepository;
 import com.bank.account.services.BankService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,25 +27,26 @@ public class BankServiceImpl implements BankService {
     private final CustomerRepository customerRepository;
     private final TransactionRepository transactionRepository;
 
+    @Transactional
     @Override
     public Optional<AccountRespDTO> createAccount(AccountReqDTO accountReqDTO) {
-        Optional<Account> account = accountMapper.reqDTOAccount(accountReqDTO);
-        if(accountReqDTO.getInitialCredit()!=0){
+        Optional<AccountRespDTO> accountRespDTO = accountMapper.reqDTOAccount(accountReqDTO)
+                .map(accountRepository::save)
+                .map(accountMapper::accountRespDTO);
+        if (accountReqDTO.getInitialCredit() != 0) {
             Transaction transaction = Transaction.builder()
                     .transaction_time(LocalDateTime.now())
                     .amount(accountReqDTO.getInitialCredit())
                     .transactionStatus("Done")
-                    .account(account.get()).build();
+                    .accountId(accountRespDTO.get().getAccountId()).build();
             transactionRepository.save(transaction);
         }
-        return account
-                .map(accountRepository::save)
-                .map(accountMapper::accountRespDTO);
+        return accountRespDTO;
     }
 
     @Override
     public List<Customer> reportCustomers() {
-        return  customerRepository.findAll();
+        return customerRepository.findAll();
     }
 
     @Override
