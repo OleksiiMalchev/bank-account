@@ -8,7 +8,9 @@ import org.springframework.data.annotation.Id;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import java.time.LocalDateTime;
+
+import java.time.LocalDate;
+
 
 @Getter
 @Setter
@@ -19,6 +21,6 @@ public class CustomerRespDTO {
     private String id;
     private String firstName;
     private String lastName;
-    private LocalDateTime dateOfBirth;
+    private LocalDate dateOfBirth;
 
 }

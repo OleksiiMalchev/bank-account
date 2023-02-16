@@ -45,7 +45,7 @@ public class CustomerController {
         return new ResponseEntity<>("Customer not create. No action taken.", HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping("/management/customers")
+    @PutMapping("/management/customers/{id}")
     public ResponseEntity<? super CustomerRespDTO> updateCustomer(@PathVariable("id") String customerId,
                                                           @RequestBody(required = false) CustomerReqDTO customerReqDTO) {
 
