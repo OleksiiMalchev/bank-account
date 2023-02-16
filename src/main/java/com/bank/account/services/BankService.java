@@ -1,5 +1,6 @@
 package com.bank.account.services;
 
+import com.bank.account.domain.Customer;
 import com.bank.account.domain.dto.AccountReqDTO;
 import com.bank.account.domain.dto.AccountRespDTO;
 import com.bank.account.domain.dto.CustomerAccountRespDTO;
@@ -11,7 +12,7 @@ import java.util.Optional;
 @Service
 public interface BankService {
     Optional<AccountRespDTO> createAccount(AccountReqDTO accountReqDTO);
-    List<CustomerAccountRespDTO> reportCustomers();
+    List<Customer>  reportCustomers();
 
     CustomerAccountRespDTO reportCustomerById(String customerId);
 
