@@ -7,6 +7,7 @@ import com.bank.account.domain.dto.AccountReqDTO;
 import com.bank.account.domain.dto.AccountRespDTO;
 import com.bank.account.domain.dto.CustomerAccountRespDTO;
 import com.bank.account.mapper.AccountMapper;
+import com.bank.account.mapper.CustomerMapper;
 import com.bank.account.repositories.AccountRepository;
 import com.bank.account.repositories.CustomerRepository;
 import com.bank.account.repositories.TransactionRepository;
@@ -26,6 +27,7 @@ public class BankServiceImpl implements BankService {
     private final AccountRepository accountRepository;
     private final CustomerRepository customerRepository;
     private final TransactionRepository transactionRepository;
+    private final CustomerMapper customerMapper;
 
     @Transactional
     @Override
@@ -45,13 +47,15 @@ public class BankServiceImpl implements BankService {
     }
 
     @Override
-    public List<Customer> reportCustomers() {
-        return customerRepository.findAll();
+    public List<CustomerAccountRespDTO> reportCustomers() {
+        return customerRepository.reportCustomer()
+                .stream().map(customerMapper::customerAccountRespDTO)
+                .toList();
     }
 
     @Override
-    public CustomerAccountRespDTO reportCustomerById(String customerId) {
-
-        return null;
+    public Optional<CustomerAccountRespDTO> reportCustomerById(String customerId) {
+        return customerRepository.reportCustomerById(customerId)
+                .map(customerMapper::customerAccountRespDTO);
     }
 }

@@ -8,12 +8,25 @@ import org.springframework.stereotype.Repository;
 
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CustomerRepository extends CrudRepository<Customer, String> {
     @Override
     List<Customer> findAll();
 
-//    @Query("Select customer from Customer customer left join fetch customer.account a where a.id = :id")
-//    Customer reportCustomerById(@Param("id") String customerId);
+    @Query(value = "SELECT * FROM customer\n" +
+            "INNER JOIN account \n" +
+            "ON customer.id= account.customer_id\n" +
+            "INNER JOIN transaction\n" +
+            "ON account.id = transaction.account_id\n" +
+            "where customer_id = :id", nativeQuery = true)
+    Optional<Customer> reportCustomerById(@Param("id") String customerId);
+
+    @Query(value = "SELECT * FROM customer\n" +
+            "INNER JOIN account \n" +
+            "ON customer.id= account.customer_id\n" +
+            "INNER JOIN transaction\n" +
+            "ON account.id = transaction.account_id", nativeQuery = true)
+    List<Customer> reportCustomer();
 }

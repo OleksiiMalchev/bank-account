@@ -11,11 +11,9 @@ import java.util.List;
 @Builder
 public class CustomerAccountRespDTO {
     private boolean active;
-    private Long balance;
     private String customerId;
     private String firstName;
     private String lastName;
-    List<TransactionRespDTO> transactions;
-
+    List<AccountTransactionRespDTO> account;
 
 }

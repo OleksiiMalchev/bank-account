@@ -12,8 +12,9 @@ import java.util.Optional;
 @Service
 public interface BankService {
     Optional<AccountRespDTO> createAccount(AccountReqDTO accountReqDTO);
-    List<Customer>  reportCustomers();
 
-    CustomerAccountRespDTO reportCustomerById(String customerId);
+    List<CustomerAccountRespDTO> reportCustomers();
+
+    Optional<CustomerAccountRespDTO> reportCustomerById(String customerId);
 
 }

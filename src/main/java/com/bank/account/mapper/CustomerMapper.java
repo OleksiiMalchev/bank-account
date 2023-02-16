@@ -1,6 +1,7 @@
 package com.bank.account.mapper;
 
 import com.bank.account.domain.Customer;
+import com.bank.account.domain.dto.CustomerAccountRespDTO;
 import com.bank.account.domain.dto.CustomerReqDTO;
 import com.bank.account.domain.dto.CustomerRespDTO;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class CustomerMapper {
+    private final AccountMapper accountMapper;
     public CustomerRespDTO customerRespDTO(Customer customer) {
         return CustomerRespDTO.builder()
                 .active(customer.isActive())
@@ -28,6 +30,18 @@ public class CustomerMapper {
                 .lastName(c.getLastName())
                 .dateOfBirth(c.getDateOfBirth())
                 .build());
+    }
+
+    public CustomerAccountRespDTO customerAccountRespDTO(Customer customer) {
+        return CustomerAccountRespDTO.builder()
+                .active(customer.isActive())
+                .customerId(customer.getId())
+                .firstName(customer.getFirstName())
+                .lastName(customer.getLastName())
+                .account(customer.getAccounts().stream()
+                        .map(accountMapper::accountTransactionRespDTO)
+                        .toList())
+                .build();
     }
 }
 
