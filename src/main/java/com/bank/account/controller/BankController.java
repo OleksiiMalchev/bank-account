@@ -15,9 +15,11 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
+
 public class BankController {
     private final BankService bankService;
     @GetMapping("/bank/customers")
+
     public ResponseEntity<? super List<CustomerAccountRespDTO>> getAllCustomer() {
         List<CustomerAccountRespDTO> customerAccountRespDTOS = bankService.reportCustomers();
         if (customerAccountRespDTOS .isEmpty()) {
