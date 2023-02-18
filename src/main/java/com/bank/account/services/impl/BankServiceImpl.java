@@ -51,8 +51,6 @@ public class BankServiceImpl implements BankService {
         return customerRepository.reportCustomer()
                 .stream().map(customerMapper::customerAccountRespDTO)
                 .toList();
-
-
     }
 
     @Override

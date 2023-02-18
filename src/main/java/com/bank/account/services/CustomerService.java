@@ -5,6 +5,7 @@ import com.bank.account.domain.dto.CustomerRespDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -14,4 +15,6 @@ public interface CustomerService {
     Optional<CustomerRespDTO> updateCustomer(String id, CustomerReqDTO customerReqDTO);
     Optional<CustomerRespDTO> getCustomerById(String id);
     boolean deleteCustomer(String id);
+    Optional<CustomerRespDTO> update(String id, Map<Object,Object> fields);
+
 }

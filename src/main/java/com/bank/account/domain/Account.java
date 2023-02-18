@@ -24,6 +24,6 @@ public class Account {
     @ManyToOne
     @JoinColumn(name="customer_id",insertable = false, updatable = false)
     private Customer customer;
-    @OneToMany(mappedBy = "account", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "account", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER) // read about  cascade = CascadeType.REMOVE,
     private List<Transaction> transactions;
 }

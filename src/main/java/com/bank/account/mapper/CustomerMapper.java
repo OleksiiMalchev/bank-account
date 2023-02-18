@@ -16,7 +16,7 @@ public class CustomerMapper {
     private final AccountMapper accountMapper;
     public CustomerRespDTO customerRespDTO(Customer customer) {
         return CustomerRespDTO.builder()
-                .active(customer.isActive())
+                .active(customer.getActive())
                 .id(customer.getId())
                 .firstName(customer.getFirstName())
                 .lastName(customer.getLastName())
@@ -25,7 +25,7 @@ public class CustomerMapper {
     }
     public Optional<Customer> reqDTOCustomer(CustomerReqDTO customerReqDTO) {
         return Optional.of(customerReqDTO).map(c->Customer.builder()
-                .active(c.isActive())
+                .active(c.getActive())
                 .firstName(c.getFirstName())
                 .lastName(c.getLastName())
                 .dateOfBirth(c.getDateOfBirth())
@@ -34,7 +34,7 @@ public class CustomerMapper {
 
     public CustomerAccountRespDTO customerAccountRespDTO(Customer customer) {
         return CustomerAccountRespDTO.builder()
-                .active(customer.isActive())
+                .active(customer.getActive())
                 .customerId(customer.getId())
                 .firstName(customer.getFirstName())
                 .lastName(customer.getLastName())

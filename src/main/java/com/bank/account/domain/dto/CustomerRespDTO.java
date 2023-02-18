@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @Builder
 public class CustomerRespDTO {
 
-    private boolean active;
+    private Boolean active;
     private String id;
     private String firstName;
     private String lastName;

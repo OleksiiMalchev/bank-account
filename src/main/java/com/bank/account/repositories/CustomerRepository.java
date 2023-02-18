@@ -18,6 +18,6 @@ public interface CustomerRepository extends CrudRepository<Customer, String> {
     @Query("SELECT customer from Customer customer left join fetch  customer.accounts where customer.id = :id")
     Optional<Customer> reportCustomerById(@Param("id") String customerId);
 
-    @Query("SELECT customer from Customer customer left join fetch  customer.accounts")
+    @Query("SELECT customer from Customer customer left join fetch  customer.accounts ") // add left join customer.accounts.transaction
     List<Customer> reportCustomer();
 }

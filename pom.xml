@@ -8,6 +8,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <version>1</version>
     <properties>
         <java.version>17</java.version>
+        <mySQL.version>8.0.30</mySQL.version>
     </properties>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -31,7 +32,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.30</version>
+            <version>${mySQL.version}</version>
         </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>

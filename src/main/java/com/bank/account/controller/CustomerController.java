@@ -5,11 +5,13 @@ import com.bank.account.domain.dto.CustomerRespDTO;
 import com.bank.account.services.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -37,7 +39,7 @@ public class CustomerController {
     }
 
     @PostMapping("/management/customers")
-    public ResponseEntity<? super CustomerRespDTO> createCustomer(@RequestBody(required = false) CustomerReqDTO customerReqDTO) {
+    public ResponseEntity<? super CustomerRespDTO> createCustomer(@RequestBody(required = false) CustomerReqDTO customerReqDTO) { //required = false срфтпу
         Optional<CustomerRespDTO> customer = customerService.createCustomer(customerReqDTO);
         if (customer.isPresent()) {
             return ResponseEntity.status(201).body(customer);
@@ -47,17 +49,30 @@ public class CustomerController {
 
     @PutMapping("/management/customers/{id}")
     public ResponseEntity<? super CustomerRespDTO> updateCustomer(@PathVariable("id") String customerId,
-                                                          @RequestBody(required = false) CustomerReqDTO customerReqDTO) {
+                                                                  @RequestBody(required = false) CustomerReqDTO customerReqDTO) {
 
         Optional<CustomerRespDTO> customerRespDTO = customerService.updateCustomer(customerId, customerReqDTO);
-        if (customerRespDTO .isPresent()) {
-            return ResponseEntity.status(200).body(customerRespDTO );
+        if (customerRespDTO.isPresent()) {
+            return ResponseEntity.status(200).body(customerRespDTO);
         }
         return new ResponseEntity<>("Customer not found. No action taken.", HttpStatus.NOT_FOUND);
     }
 
+
+    @PatchMapping(value = "/management/customers/{id}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<? super CustomerRespDTO> update(@PathVariable("id") String customerId,
+                                                          @RequestBody Map<Object, Object> fields) {
+
+        Optional<CustomerRespDTO> updateCustomer = customerService.update(customerId, fields);
+        if (updateCustomer.isPresent()) {
+            return ResponseEntity.status(200).body(updateCustomer);
+        }
+        return new ResponseEntity<>("Customer not found. No action taken.", HttpStatus.NOT_FOUND);
+    }
+
+
     @DeleteMapping("/management/customers/{id}")
-    public ResponseEntity<String> deleteCustomer(@PathVariable("id") String customerId)  {
+    public ResponseEntity<String> deleteCustomer(@PathVariable("id") String customerId) {
         customerService.deleteCustomer(customerId);
         if (customerService.deleteCustomer(customerId)) {
             return new ResponseEntity<String>("DELETE Response", HttpStatus.OK);

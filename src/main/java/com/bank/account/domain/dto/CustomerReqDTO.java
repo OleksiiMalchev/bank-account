@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @Builder
 public class CustomerReqDTO {
 
-    private boolean active;
+    private Boolean active;
     private String firstName;
     private String lastName;
     private LocalDate dateOfBirth;

@@ -4,6 +4,8 @@ import com.bank.account.domain.Customer;
 import com.bank.account.domain.dto.*;
 import com.bank.account.services.BankService;
 import com.bank.account.services.CustomerService;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +20,11 @@ import java.util.Optional;
 
 public class BankController {
     private final BankService bankService;
-    @GetMapping("/bank/customers")
 
+    @GetMapping("/bank/customers")
     public ResponseEntity<? super List<CustomerAccountRespDTO>> getAllCustomer() {
         List<CustomerAccountRespDTO> customerAccountRespDTOS = bankService.reportCustomers();
-        if (customerAccountRespDTOS .isEmpty()) {
+        if (customerAccountRespDTOS.isEmpty()) {
             return new ResponseEntity<>("Customers not found ", HttpStatus.NOT_FOUND);
         } else {
             return ResponseEntity.status(200).body(customerAccountRespDTOS);
@@ -37,13 +39,16 @@ public class BankController {
         }
         return new ResponseEntity<>("Customer by id" + customerId + " not found. No action taken.", HttpStatus.NOT_FOUND);
     }
+
     @PostMapping("/bank/customers/add-account")
-    public ResponseEntity<? super AccountRespDTO> createAccount(@RequestBody(required = false)AccountReqDTO accountReqDTO) {
+    public ResponseEntity<? super AccountRespDTO> createAccount(@RequestBody(required = false) AccountReqDTO accountReqDTO) {
         Optional<AccountRespDTO> account = bankService.createAccount(accountReqDTO);
         if (account.isPresent()) {
             return ResponseEntity.status(201).body(account);
         }
         return new ResponseEntity<>("Account not create. No action taken.", HttpStatus.NOT_FOUND);
     }
+
+
 
 }

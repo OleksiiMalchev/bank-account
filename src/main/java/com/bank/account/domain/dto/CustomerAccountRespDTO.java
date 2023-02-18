@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 @Builder
 public class CustomerAccountRespDTO {
-    private boolean active;
+    private Boolean active;
     private String customerId;
     private String firstName;
     private String lastName;
