@@ -47,23 +47,12 @@ public class CustomerController {
         return new ResponseEntity<>("Customer not create. No action taken.", HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping("/management/customers/{id}")
-    public ResponseEntity<? super CustomerRespDTO> updateCustomer(@PathVariable("id") String customerId,
-                                                                  @RequestBody(required = false) CustomerReqDTO customerReqDTO) {
 
-        Optional<CustomerRespDTO> customerRespDTO = customerService.updateCustomer(customerId, customerReqDTO);
-        if (customerRespDTO.isPresent()) {
-            return ResponseEntity.status(200).body(customerRespDTO);
-        }
-        return new ResponseEntity<>("Customer not found. No action taken.", HttpStatus.NOT_FOUND);
-    }
-
-
-    @PatchMapping(value = "/management/customers/{id}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PatchMapping("/management/customers/{id}")
     public ResponseEntity<? super CustomerRespDTO> update(@PathVariable("id") String customerId,
                                                           @RequestBody Map<Object, Object> fields) {
 
-        Optional<CustomerRespDTO> updateCustomer = customerService.update(customerId, fields);
+        Optional<CustomerRespDTO> updateCustomer = customerService.updateCustomer(customerId, fields);
         if (updateCustomer.isPresent()) {
             return ResponseEntity.status(200).body(updateCustomer);
         }

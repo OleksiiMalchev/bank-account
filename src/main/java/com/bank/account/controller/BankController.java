@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -48,7 +49,24 @@ public class BankController {
         }
         return new ResponseEntity<>("Account not create. No action taken.", HttpStatus.NOT_FOUND);
     }
+    @PutMapping("/bank/customers/deposit/{id}")
+    public ResponseEntity<? super AccountRespDTO> depositToAccount(@PathVariable("id") String accountId,
+                                                                   @RequestBody DepositWithdrawalDTO deposit) {
+        Optional<AccountRespDTO> accountRespDTO = bankService.depositToAccount(accountId, deposit);
+        if (accountRespDTO.isPresent()) {
+            return ResponseEntity.status(200).body(accountRespDTO);
+        }
+        return new ResponseEntity<>("Transaction is faild. No action taken.", HttpStatus.NOT_FOUND);
+    }
 
-
+    @PutMapping("/bank/customers/withdrawal/{id}")
+    public ResponseEntity<? super AccountRespDTO> withdrawalFromAccount(@PathVariable("id") String accountId,
+                                                                   @RequestBody DepositWithdrawalDTO withdrawal) {
+        Optional<AccountRespDTO> accountRespDTO = bankService.withdrawalFromAccount(accountId, withdrawal);
+        if (accountRespDTO.isPresent()) {
+            return ResponseEntity.status(200).body(accountRespDTO);
+        }
+        return new ResponseEntity<>("Transaction is faild. No action taken.", HttpStatus.NOT_FOUND);
+    }
 
 }

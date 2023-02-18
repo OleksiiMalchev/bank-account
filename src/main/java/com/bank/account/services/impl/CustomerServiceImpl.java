@@ -42,19 +42,21 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    @Transactional
-    public Optional<CustomerRespDTO> updateCustomer(String customerId, CustomerReqDTO customerReqDTO) {
-        return customerRepository.findById(customerId)
-                .map(c -> {
-                    c.setActive(customerReqDTO.getActive());
-                    c.setFirstName(customerReqDTO.getFirstName());
-                    c.setLastName(customerReqDTO.getLastName());
-                    c.setDateOfBirth(customerReqDTO.getDateOfBirth());
-                    return c;
-                })
-                .map(customerMapper::customerRespDTO); //как сравнить два обїекта (какие поля);
-    }
+    public Optional<CustomerRespDTO> updateCustomer(String customerId, Map<Object, Object> fields) {
+        Optional<Customer> customerInBase = customerRepository.findById(customerId);
+        fields.forEach((key, value) -> {
+            Field field = ReflectionUtils.findField(Customer.class, (String) key);
+            field.setAccessible(true);
+            if (field.getAnnotatedType().getType().equals(LocalDate.class)) {
+                ReflectionUtils.setField(field, customerInBase.get(), LocalDate.parse(value.toString()));
+            } else {
+                ReflectionUtils.setField(field, customerInBase.get(), value);
+            }
+        });
 
+        return customerInBase.map(customerRepository::save)
+                .map(customerMapper::customerRespDTO);
+    }
 
     @Override
     public Optional<CustomerRespDTO> getCustomerById(String id) {
@@ -72,20 +74,5 @@ public class CustomerServiceImpl implements CustomerService {
         return false;
     }
 
-    @Override
-    public Optional<CustomerRespDTO> update(String customerId, Map<Object, Object> fields) {
-        Optional<Customer> customerInBase = customerRepository.findById(customerId);
-        fields.forEach((key, value) -> {
-            Field field = ReflectionUtils.findField(Customer.class, (String) key);
-            field.setAccessible(true);
-            if (field.getAnnotatedType().getType().equals(LocalDate.class)) {
-                ReflectionUtils.setField(field, customerInBase.get(), LocalDate.parse(value.toString()));
-            } else {
-                ReflectionUtils.setField(field, customerInBase.get(), value);
-            }
-        });
 
-        return customerInBase.map(customerRepository::save)
-                .map(customerMapper::customerRespDTO);
-    }
 }
