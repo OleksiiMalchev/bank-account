@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -61,12 +62,19 @@ public class BankController {
 
     @PutMapping("/bank/customers/withdrawal/{id}")
     public ResponseEntity<? super AccountRespDTO> withdrawalFromAccount(@PathVariable("id") String accountId,
-                                                                   @RequestBody DepositWithdrawalDTO withdrawal) {
+                                                                   @RequestBody DepositWithdrawalDTO withdrawal)
+            throws IOException {
         Optional<AccountRespDTO> accountRespDTO = bankService.withdrawalFromAccount(accountId, withdrawal);
         if (accountRespDTO.isPresent()) {
             return ResponseEntity.status(200).body(accountRespDTO);
         }
         return new ResponseEntity<>("Transaction is faild. No action taken.", HttpStatus.NOT_FOUND);
+    }
+
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IOException.class)
+    public String handleIOException(IOException exception) {
+        return new String(exception.getMessage());
     }
 
 }

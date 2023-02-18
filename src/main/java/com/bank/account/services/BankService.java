@@ -7,6 +7,7 @@ import com.bank.account.domain.dto.CustomerAccountRespDTO;
 import com.bank.account.domain.dto.DepositWithdrawalDTO;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +19,6 @@ public interface BankService {
 
     Optional<CustomerAccountRespDTO> reportCustomerById(String customerId);
     Optional<AccountRespDTO> depositToAccount(String AccountId, DepositWithdrawalDTO deposit);
-    Optional<AccountRespDTO> withdrawalFromAccount(String AccountId, DepositWithdrawalDTO withdrawal);
+    Optional<AccountRespDTO> withdrawalFromAccount(String AccountId, DepositWithdrawalDTO withdrawal) throws IOException;
 
 }

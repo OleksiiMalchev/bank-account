@@ -17,6 +17,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -60,16 +61,12 @@ public class BankServiceImpl implements BankService {
                 .map(customerMapper::customerAccountRespDTO);
     }
 
+    @Transactional
     @Override
     public Optional<AccountRespDTO> depositToAccount(String accountId, DepositWithdrawalDTO deposit) {
         Optional<Account> accountInBase = accountRepository.findById(accountId);
         if (deposit.getAmount() >= 0) {
-            Transaction transaction = Transaction.builder()
-                    .transaction_time(LocalDateTime.now())
-                    .amount(deposit.getAmount())
-                    .transactionStatus("Done")
-                    .accountId(accountId).build();
-            transactionRepository.save(transaction);
+            createTransaction(accountId, deposit);
             Long balance = accountInBase.get().getBalance();
             accountInBase.get().setBalance(balance + deposit.getAmount());
         }
@@ -77,20 +74,27 @@ public class BankServiceImpl implements BankService {
                 .map(accountMapper::accountRespDTO);
     }
 
+    @Transactional
     @Override
-    public Optional<AccountRespDTO> withdrawalFromAccount(String accountId, DepositWithdrawalDTO withdrawal) {
+    public Optional<AccountRespDTO> withdrawalFromAccount(String accountId, DepositWithdrawalDTO withdrawal) throws  IOException {
         Optional<Account> accountInBase = accountRepository.findById(accountId);
         Long balance = accountInBase.get().getBalance();
-        if(withdrawal.getAmount() >=0 && withdrawal.getAmount()<=balance){
-            Transaction transaction = Transaction.builder()
-                    .transaction_time(LocalDateTime.now())
-                    .amount(withdrawal.getAmount())
-                    .transactionStatus("Done")
-                    .accountId(accountId).build();
-            transactionRepository.save(transaction);
+        if (withdrawal.getAmount() >= 0 && withdrawal.getAmount() <= balance) {
+            createTransaction(accountId, withdrawal);
             accountInBase.get().setBalance(balance - withdrawal.getAmount());
+        } else {
+            throw new IOException("Not enough money on balance. Your abalance " + balance );
         }
         return accountInBase.map(accountRepository::save)
                 .map(accountMapper::accountRespDTO);
+    }
+
+    private void createTransaction(String id, DepositWithdrawalDTO depositOrWithdrawal) {
+        Transaction transaction = Transaction.builder()
+                .transaction_time(LocalDateTime.now())
+                .amount(depositOrWithdrawal.getAmount())
+                .transactionStatus("Done")
+                .accountId(id).build();
+        transactionRepository.save(transaction);
     }
 }
