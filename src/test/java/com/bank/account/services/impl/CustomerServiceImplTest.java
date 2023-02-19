@@ -14,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -65,11 +67,11 @@ class CustomerServiceImplTest extends TestUnitConfig {
         Assertions.assertEquals(testCustomerFirstNameF, customers.get(0).getFirstName());
         Assertions.assertEquals(testCustomerLastNameF, customers.get(0).getLastName());
         Assertions.assertEquals(testCustomerDateOfBirthF, customers.get(0).getDateOfBirth());
-        Assertions.assertEquals(testCustomerActiveF, customers.get(0).isActive());
+        Assertions.assertEquals(testCustomerActiveF, customers.get(0).getActive());
         Assertions.assertEquals(testCustomerFirstNameS, customers.get(1).getFirstName());
         Assertions.assertEquals(testCustomerLastNameS, customers.get(1).getLastName());
         Assertions.assertEquals(testCustomerDateOfBirthS, customers.get(1).getDateOfBirth());
-        Assertions.assertEquals(testCustomerActiveS, customers.get(1).isActive());
+        Assertions.assertEquals(testCustomerActiveS, customers.get(1).getActive());
     }
 
     @Test
@@ -96,12 +98,12 @@ class CustomerServiceImplTest extends TestUnitConfig {
         Assertions.assertEquals(testCustomerFirstNameF, customerEntity.getFirstName());
         Assertions.assertEquals(testCustomerLastNameF, customerEntity.getLastName());
         Assertions.assertEquals(testCustomerDateOfBirthF, customerEntity.getDateOfBirth());
-        Assertions.assertEquals(testCustomerActiveF, customerEntity.isActive());
+        Assertions.assertEquals(testCustomerActiveF, customerEntity.getActive());
         Assertions.assertTrue(customerRespDTO.isPresent());
         Assertions.assertEquals(testCustomerFirstNameF, customerRespDTO.get().getFirstName());
         Assertions.assertEquals(testCustomerLastNameF, customerRespDTO.get().getLastName());
         Assertions.assertEquals(testCustomerDateOfBirthF, customerRespDTO.get().getDateOfBirth());
-        Assertions.assertEquals(testCustomerActiveF, customerRespDTO.get().isActive());
+        Assertions.assertEquals(testCustomerActiveF, customerRespDTO.get().getActive());
 
     }
 
@@ -129,16 +131,22 @@ class CustomerServiceImplTest extends TestUnitConfig {
                 .id(testCustomerIdF)
                 .build();
 
+        Map<Object, Object> fields = new HashMap<>();
+        fields.put("firstName", testCustomerFirstNameS);
+        fields.put("lastName", testCustomerLastNameS);
+        fields.put("dateOfBirth",testCustomerDateOfBirthS);
+
+
         when(customerRepository.existsById(testCustomerIdF)).thenReturn(true);
         when(customerRepository.findById(testCustomerIdF)).thenReturn(Optional.ofNullable(customerInBase));
         when(customerRepository.save(customerUpdate)).thenReturn(customerUpdate);
         when(customerRepository.findById(testCustomerIdF)).thenReturn(Optional.ofNullable(customerUpdate));
-        Optional<CustomerRespDTO> customerRespDTO = customerService.updateCustomer(testCustomerIdF, customerReqDTO);
+        Optional<CustomerRespDTO> customerRespDTO = customerService.updateCustomer(testCustomerIdF, fields);
         Assertions.assertTrue(customerRespDTO.isPresent());
         Assertions.assertEquals(testCustomerFirstNameS, customerRespDTO.get().getFirstName());
         Assertions.assertEquals(testCustomerLastNameS, customerRespDTO.get().getLastName());
         Assertions.assertEquals(testCustomerDateOfBirthS, customerRespDTO.get().getDateOfBirth());
-        Assertions.assertEquals(testCustomerActiveS, customerRespDTO.get().isActive());
+        Assertions.assertEquals(testCustomerActiveF, customerRespDTO.get().getActive());
     }
 
     @Test
@@ -153,12 +161,12 @@ class CustomerServiceImplTest extends TestUnitConfig {
 
         when(customerRepository.findById(testCustomerIdF)).thenReturn(Optional.of(customer));
         Optional<CustomerRespDTO> customerById = customerService.getCustomerById(testCustomerIdF);
-        verify(customerRepository,times(1)).findById(testCustomerIdF);
+        verify(customerRepository, times(1)).findById(testCustomerIdF);
         Assertions.assertTrue(customerById.isPresent());
         Assertions.assertEquals(testCustomerFirstNameF, customerById.get().getFirstName());
         Assertions.assertEquals(testCustomerLastNameF, customerById.get().getLastName());
         Assertions.assertEquals(testCustomerDateOfBirthF, customerById.get().getDateOfBirth());
-        Assertions.assertEquals(testCustomerActiveF, customerById.get().isActive());
+        Assertions.assertEquals(testCustomerActiveF, customerById.get().getActive());
     }
 
     @Test

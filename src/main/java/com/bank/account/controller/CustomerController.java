@@ -39,7 +39,7 @@ public class CustomerController {
     }
 
     @PostMapping("/management/customers")
-    public ResponseEntity<? super CustomerRespDTO> createCustomer(@RequestBody(required = false) CustomerReqDTO customerReqDTO) { //required = false срфтпу
+    public ResponseEntity<? super CustomerRespDTO> createCustomer(@RequestBody CustomerReqDTO customerReqDTO) { //required = false срфтпу
         Optional<CustomerRespDTO> customer = customerService.createCustomer(customerReqDTO);
         if (customer.isPresent()) {
             return ResponseEntity.status(201).body(customer);
@@ -62,11 +62,10 @@ public class CustomerController {
 
     @DeleteMapping("/management/customers/{id}")
     public ResponseEntity<String> deleteCustomer(@PathVariable("id") String customerId) {
-        customerService.deleteCustomer(customerId);
         if (customerService.deleteCustomer(customerId)) {
-            return new ResponseEntity<String>("DELETE Response", HttpStatus.OK);
+            return new ResponseEntity<String>("Delete Response", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Customer not found. No action taken.", HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>("Customer not found. No action taken.", HttpStatus.NO_CONTENT);
     }
-
 }

@@ -7,6 +7,7 @@ import com.bank.account.domain.Transaction;
 import com.bank.account.domain.dto.AccountReqDTO;
 import com.bank.account.domain.dto.AccountRespDTO;
 import com.bank.account.domain.dto.CustomerAccountRespDTO;
+import com.bank.account.domain.dto.DepositWithdrawalDTO;
 import com.bank.account.repositories.AccountRepository;
 import com.bank.account.repositories.CustomerRepository;
 import com.bank.account.repositories.TransactionRepository;
@@ -18,6 +19,7 @@ import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -141,7 +143,7 @@ class BankServiceImplTest extends TestUnitConfig {
         Assertions.assertEquals(testCustomerFirstNameF, customerAccountRespDTOS.get(0).getFirstName());
         Assertions.assertEquals(testCustomerLastNameF, customerAccountRespDTOS.get(0).getLastName());
         Assertions.assertEquals(testCustomerIdF, customerAccountRespDTOS.get(0).getCustomerId());
-        Assertions.assertEquals(testCustomerActiveF, customerAccountRespDTOS.get(0).isActive());
+        Assertions.assertEquals(testCustomerActiveF, customerAccountRespDTOS.get(0).getActive());
         Assertions.assertEquals(accountId, customerAccountRespDTOS.get(0).getAccount().get(0).getAccountId());
         Assertions.assertEquals(100L, customerAccountRespDTOS.get(0).getAccount().get(0).getBalance());
         Assertions.assertEquals(10L, customerAccountRespDTOS.get(0)
@@ -199,7 +201,7 @@ class BankServiceImplTest extends TestUnitConfig {
         Assertions.assertEquals(testCustomerFirstNameF, customerAccountRespDTO.get().getFirstName());
         Assertions.assertEquals(testCustomerLastNameF, customerAccountRespDTO.get().getLastName());
         Assertions.assertEquals(testCustomerIdF, customerAccountRespDTO.get().getCustomerId());
-        Assertions.assertEquals(testCustomerActiveF, customerAccountRespDTO.get().isActive());
+        Assertions.assertEquals(testCustomerActiveF, customerAccountRespDTO.get().getActive());
         Assertions.assertEquals(accountId, customerAccountRespDTO.get().getAccount().get(0).getAccountId());
         Assertions.assertEquals(100L, customerAccountRespDTO.get().getAccount().get(0).getBalance());
         Assertions.assertEquals(10L, customerAccountRespDTO.get()
@@ -208,5 +210,62 @@ class BankServiceImplTest extends TestUnitConfig {
                 .getAccount().get(0).getTransaction().get(0).getTransactionStatus());
         Assertions.assertEquals(transactionIdF, customerAccountRespDTO.get()
                 .getAccount().get(0).getTransaction().get(0).getId());
+    }
+
+    @Test
+    void depositToAccount(){
+        String accountId = "10373589-3eca-413e-b58e-5844de327830";
+        String transactionIdF = "06373589-3eca-413e-b58e-5844de327830";
+        String transactionStatus = "Done";
+
+        Account accountF = Account.builder()
+                .Id(accountId)
+                .customerId(testCustomerIdF)
+                .balance(100L)
+                .build();
+
+        Account accountDep = Account.builder()
+                .Id(accountId)
+                .customerId(testCustomerIdF)
+                .balance(1100L)
+                .build();
+        DepositWithdrawalDTO deposit = DepositWithdrawalDTO.builder().amount(1000L).build();
+
+        Long finalBalanceAfterDeposit = 1100L;
+
+        when(accountRepository.findById(accountId)).thenReturn(Optional.of(accountF));
+        when(accountRepository.save(ArgumentMatchers.any(Account.class))).thenReturn(accountDep);
+        Optional<AccountRespDTO> accountRespDTO = bankService.depositToAccount(accountId, deposit);
+        verify(accountRepository, times(1)).findById(accountId);
+        Assertions.assertEquals(finalBalanceAfterDeposit, accountRespDTO.get().getBalance());
+
+    }
+
+    @Test
+    void withdrawalFromAccount() throws IOException {
+        String accountId = "10373589-3eca-413e-b58e-5844de327830";
+        String transactionIdF = "06373589-3eca-413e-b58e-5844de327830";
+        String transactionStatus = "Done";
+
+        Account accountF = Account.builder()
+                .Id(accountId)
+                .customerId(testCustomerIdF)
+                .balance(1100L)
+                .build();
+
+        Account accountDep = Account.builder()
+                .Id(accountId)
+                .customerId(testCustomerIdF)
+                .balance(100L)
+                .build();
+
+        DepositWithdrawalDTO withdrawal = DepositWithdrawalDTO.builder().amount(1000L).build();
+        Long finalBalanceAfterDeposit = 100L;
+        when(accountRepository.findById(accountId)).thenReturn(Optional.of(accountF));
+        when(accountRepository.save(ArgumentMatchers.any(Account.class))).thenReturn(accountDep);
+        Optional<AccountRespDTO> accountRespDTO = bankService.withdrawalFromAccount(accountId, withdrawal);
+        verify(accountRepository, times(1)).findById(accountId);
+        Assertions.assertEquals(finalBalanceAfterDeposit, accountRespDTO.get().getBalance());
+
     }
 }

@@ -24,7 +24,7 @@ public class BankController {
     private final BankService bankService;
 
     @GetMapping("/bank/customers")
-    public ResponseEntity<? super List<CustomerAccountRespDTO>> getAllCustomer() {
+    public ResponseEntity<? super List<CustomerAccountRespDTO>> reportCustomers() {
         List<CustomerAccountRespDTO> customerAccountRespDTOS = bankService.reportCustomers();
         if (customerAccountRespDTOS.isEmpty()) {
             return new ResponseEntity<>("Customers not found ", HttpStatus.NOT_FOUND);
